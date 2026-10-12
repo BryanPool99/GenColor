@@ -1,28 +1,75 @@
-<div class="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+<div class="min-h-screen py-8 px-4 sm:px-6 lg:px-8 bg-transparent">
   <div class="max-w-6xl mx-auto">
     <header class="text-center mb-10">
-      <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-2 tracking-tight">
-        Generador de Paletas
-      </h1>
-      <p class="text-gray-500 text-sm sm:text-base">
+      <div class="flex items-center justify-center gap-4 mb-4">
+        <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-0 tracking-tight">
+          Generador de Paletas
+        </h1>
+        <button
+          (click)="toggleTheme()"
+          class="p-2 rounded-xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all duration-200"
+          [attr.aria-label]="isDark() ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
+        >
+          <ng-container *ngIf="isDark(); else lightIcon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+          </ng-container>
+          <ng-template #lightIcon>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+          </ng-template>
+        </button>
+      </div>
+      <p class="text-gray-500 dark:text-slate-400 text-sm sm:text-base">
         Crea paletas únicas con Angular Signals + Tailwind
       </p>
     </header>
 
     <div class="grid lg:grid-cols-3 gap-8">
       <div class="lg:col-span-2 space-y-6">
-        <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <section class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+          <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Tipos de Paleta</h2>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            @for (palette of paletteType(); track palette.id) {
+              <button
+                (click)="selectPalette(palette.id)"
+                class="p-3 rounded-xl text-left transition-all duration-200 flex items-center gap-2"
+                [ngClass]="getPaletteButtonClass(palette.id)"
+              >
+                <span>{{ palette.icon }}</span>
+                <span class="text-sm font-medium">{{ palette.name }}</span>
+              </button>
+            }
+          </div>
+        </section>
+
+        <section class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
           <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-semibold text-gray-800">Color Base</h2>
-            <button
-              (click)="generateRandom()"
-              class="btn-ghost px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 flex items-center gap-2"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-              Aleatorio
-            </button>
+            <h2 class="text-lg font-semibold text-gray-800 dark:text-white">Color Base</h2>
+            <div class="flex items-center gap-2">
+              <button
+                (click)="setRandomColorWithVariety()"
+                class="btn-ghost px-4 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700/50 flex items-center gap-2"
+                type="button"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Aleatorio
+              </button>
+              <button
+                (click)="generateJSONExport()"
+                class="btn-ghost px-4 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700/50 flex items-center gap-2"
+                type="button"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Exportar
+              </button>
+            </div>
           </div>
 
           <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
@@ -32,6 +79,7 @@
                 [value]="currentColor().hex"
                 (input)="onColorInputChange($event)"
                 class="absolute inset-0 w-full h-full cursor-pointer opacity-0"
+                [attr.aria-label]="'Color base: ' + currentColor().hex"
               />
               <div
                 class="w-full h-full flex items-center justify-center"
@@ -44,54 +92,48 @@
             <div class="flex-1 w-full">
               <div class="space-y-2">
                 <div class="flex items-center gap-3">
-                  <label class="text-xs text-gray-500 w-12">HEX</label>
+                  <label class="text-xs text-gray-500 dark:text-slate-400 w-12">HEX</label>
                   <input
                     type="text"
                     [value]="currentColor().hex"
                     (input)="onHueChange($event)"
-                    class="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    class="flex-1 px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
                     maxlength="7"
                   />
                 </div>
                 <div class="flex items-center gap-3">
-                  <label class="text-xs text-gray-500 w-12">HSL</label>
+                  <label class="text-xs text-gray-500 dark:text-slate-400 w-12">HSL</label>
                   <input
                     type="text"
                     [value]="currentColor().hsl.h + ', ' + currentColor().hsl.s + '%, ' + currentColor().hsl.l + '%'"
                     readonly
-                    class="flex-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm font-mono text-gray-500"
+                    class="flex-1 px-3 py-2 bg-gray-50 dark:bg-slate-700/50 border border-gray-200 dark:border-slate-600 rounded-lg text-sm font-mono text-gray-500 dark:text-slate-400"
                   />
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="grid grid-cols-2 gap-3 mt-4 pt-4 border-t border-gray-100">
-            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-              <span class="text-sm text-gray-600">Con Blanco</span>
+          <div class="grid grid-cols-2 gap-3 mt-4 pt-4 border-t border-gray-200 dark:border-slate-700">
+            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg">
+              <span class="text-sm text-gray-600 dark:text-slate-300">Con Blanco</span>
               <div class="flex items-center gap-2">
-                <span class="text-xs font-mono text-gray-400">{{ contrastWhite().ratio.toFixed(2) }}:1</span>
+                <span class="text-xs font-mono text-gray-400 dark:text-slate-500">{{ contrastWhite().ratio.toFixed(2) }}:1</span>
                 <span
                   class="px-1.5 py-0.5 text-xs rounded"
-                  [class.bg-green-100]="contrastWhite().passesAA"
-                  [class.text-green-700]="contrastWhite().passesAA"
-                  [class.bg-red-100]="!contrastWhite().passesAA"
-                  [class.text-red-700]="!contrastWhite().passesAA"
+                  [ngClass]="getContrastBadgeClass(contrastWhite().passesAA, contrastWhite().passesAAA)"
                 >
                   {{ contrastWhite().passesAAA ? 'AAA' : (contrastWhite().passesAA ? 'AA' : 'Fail') }}
                 </span>
               </div>
             </div>
-            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-              <span class="text-sm text-gray-600">Con Negro</span>
+            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg">
+              <span class="text-sm text-gray-600 dark:text-slate-300">Con Negro</span>
               <div class="flex items-center gap-2">
-                <span class="text-xs font-mono text-gray-400">{{ contrastBlack().ratio.toFixed(2) }}:1</span>
+                <span class="text-xs font-mono text-gray-400 dark:text-slate-500">{{ contrastBlack().ratio.toFixed(2) }}:1</span>
                 <span
                   class="px-1.5 py-0.5 text-xs rounded"
-                  [class.bg-green-100]="contrastBlack().passesAA"
-                  [class.text-green-700]="contrastBlack().passesAA"
-                  [class.bg-red-100]="!contrastBlack().passesAA"
-                  [class.text-red-700]="!contrastBlack().passesAA"
+                  [ngClass]="getContrastBadgeClass(contrastBlack().passesAA, contrastBlack().passesAAA)"
                 >
                   {{ contrastBlack().passesAAA ? 'AAA' : (contrastBlack().passesAA ? 'AA' : 'Fail') }}
                 </span>
@@ -100,57 +142,50 @@
           </div>
         </section>
 
-        <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-          <h2 class="text-lg font-semibold text-gray-800 mb-4">Tipo de Paleta</h2>
-          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-            @for (palette of paletteType(); track palette.id) {
-              <button
-                (click)="selectPalette(palette.id)"
-                class="p-3 rounded-xl text-left transition-all duration-200 flex items-center gap-2"
-                [class.bg-blue-50]="selectedPalette() === palette.id"
-                [class.border-blue-500]="selectedPalette() === palette.id"
-                [class.text-blue-700]="selectedPalette() === palette.id"
-                [class.bg-gray-50]="selectedPalette() !== palette.id"
-                [class.border-gray-200]="selectedPalette() !== palette.id"
-                [class.text-gray-600]="selectedPalette() !== palette.id"
-                [class.hover:bg-gray-100]="selectedPalette() !== palette.id"
-                [class.border]="true"
-              >
-                <span>{{ palette.icon }}</span>
-                <span class="text-sm font-medium">{{ palette.name }}</span>
-              </button>
-            }
-          </div>
-        </section>
-
-        <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-          <h2 class="text-lg font-semibold text-gray-800 mb-4">Paleta Generada</h2>
+        <section class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+          <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Paleta Generada</h2>
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-            @for (color of currentPaletteColors(); track color.hex; let i = $index) {
-              <div
-                class="color-swatch rounded-xl overflow-hidden shadow-sm fade-in opacity-0"
-                [style.animation-delay]="(i * 0.1) + 's'"
-              >
+            @for (color of currentPaletteColors(); track $index; let i = $index) {
+              <div class="group relative">
                 <div
-                  class="h-20 sm:h-24 cursor-pointer relative group"
-                  [style.background-color]="color.hex"
+                  class="rounded-xl overflow-hidden shadow-sm cursor-pointer fade-in"
+                  [style.animation-delay]="(i * 0.1) + 's'"
                   (click)="copyToClipboard(color.hex)"
                 >
-                  <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/20 transition-opacity">
-                    @if (isCopied(color.hex)) {
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                      </svg>
-                    } @else {
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                      </svg>
-                    }
+                  <div
+                    class="h-20 sm:h-24 relative transition-transform group-hover:scale-105"
+                    [style.background-color]="color.hex"
+                  >
+                    <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/20 transition-opacity">
+                      @if (isCopied(color.hex)) {
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                      } @else {
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                      }
+                    </div>
                   </div>
-                </div>
-                <div class="p-3 bg-white">
-                  <p class="font-mono text-xs text-gray-700 font-semibold">{{ color.hex }}</p>
-                  <p class="text-xs text-gray-400 mt-1">{{ color.hsl.h }}°, {{ color.hsl.s }}%, {{ color.hsl.l }}%</p>
+                  <div class="p-3 bg-white dark:bg-slate-700/50">
+                    <div class="flex items-center justify-between">
+                      <p class="font-mono text-xs text-gray-700 dark:text-slate-300 font-semibold">{{ color.hex }}</p>
+                      <button
+                        class="p-1 text-gray-400 hover:text-red-500 transition-colors"
+                        [attr.aria-label]="'Añadir ' + color.hex + ' a favoritos'"
+                        (click)="$event.stopPropagation(); toggleFavorite(color.hex)"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                             [class.fill-red-500]="isFavorite(color.hex)"
+                             [class.text-red-500]="isFavorite(color.hex)">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                      </button>
+                    </div>
+                    <p class="text-xs text-gray-400 dark:text-slate-500 mt-1">{{ color.hsl.h }}°, {{ color.hsl.s }}%, {{ color.hsl.l }}%</p>
+                    <p class="text-xs text-gray-400 dark:text-slate-500 mt-0.5">{{ getColorName(color.hex) }}</p>
+                  </div>
                 </div>
               </div>
             }
@@ -159,9 +194,27 @@
       </div>
 
       <div class="lg:col-span-1">
-        <div class="sticky top-8">
-          <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-            <h2 class="text-lg font-semibold text-gray-800 mb-4">Preview</h2>
+        <div class="sticky top-8 space-y-6">
+          <section class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 p-6" [class.hidden]="getFavoriteCount() === 0">
+            <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Favoritos ({{ getFavoriteCount() }})</h2>
+            <div class="grid grid-cols-2 gap-2">
+              @for (favColor of favoriteColors(); track $index) {
+                <button
+                  (click)="copyToClipboard(favColor.hex)"
+                  class="h-12 rounded-lg relative transition-transform hover:scale-105"
+                  [style.background-color]="favColor.hex"
+                  [attr.aria-label]="'Favorito: ' + favColor.hex"
+                >
+                  <span class="absolute inset-0 flex items-center justify-center text-white text-xs font-mono">
+                    {{ favColor.hex }}
+                  </span>
+                </button>
+              }
+            </div>
+          </section>
+
+          <section class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+            <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Preview</h2>
             <div
               class="preview-card rounded-xl overflow-hidden"
               [style.background-color]="previewColors().bg"
@@ -212,18 +265,18 @@
                 </div>
               </div>
             </div>
-            <p class="text-xs text-gray-400 mt-3 text-center">Vista previa de interfaz</p>
+            <p class="text-xs text-gray-400 dark:text-slate-500 mt-3 text-center">Vista previa de interfaz</p>
           </section>
 
-          <div class="bg-gray-50 rounded-xl p-4 mt-4 text-center">
-            <p class="text-xs text-gray-400">Espacio para AdSense</p>
-            <p class="text-xs text-gray-300 mt-1">376×280</p>
+          <div class="bg-gray-50 dark:bg-slate-700/50 rounded-xl p-4 text-center">
+            <p class="text-xs text-gray-400 dark:text-slate-500">Espacio para AdSense</p>
+            <p class="text-xs text-gray-300 dark:text-slate-600 mt-1">376x280</p>
           </div>
         </div>
       </div>
     </div>
 
-    <footer class="text-center py-8 mt-12 text-gray-400">
+    <footer class="text-center py-8 mt-12 text-gray-400 dark:text-slate-500">
       <p class="text-sm">Angular 19 • Signals • Tailwind CSS • WCAG</p>
     </footer>
   </div>

@@ -63,15 +63,53 @@ export class ColorService {
   });
 
   readonly trending2026 = computed<ColorInfo[]>(() => {
+    this.lastGenerated();
+    const base = this.currentColor();
     const trends = [
-      { h: 250, s: 75, l: 65 },
-      { h: 180, s: 65, l: 45 },
-      { h: 340, s: 80, l: 58 },
-      { h: 45, s: 90, l: 55 },
-      { h: 270, s: 50, l: 72 },
-      { h: 160, s: 55, l: 38 },
+      { h: (base.hsl.h + 250) % 360, s: 75, l: 65 },
+      { h: (base.hsl.h + 180) % 360, s: 65, l: 45 },
+      { h: (base.hsl.h + 340) % 360, s: 80, l: 58 },
+      { h: (base.hsl.h + 45) % 360, s: 90, l: 55 },
+      { h: (base.hsl.h + 270) % 360, s: 50, l: 72 },
+      { h: (base.hsl.h + 160) % 360, s: 55, l: 38 },
     ];
     return trends.map(t => this.hslToColor(t.h, t.s, t.l));
+  });
+
+  readonly tetradic = computed<ColorInfo[]>(() => {
+    const base = this.currentColor();
+    const h = base.hsl.h;
+    return [
+      base,
+      this.hslToColor((h + 60) % 360, base.hsl.s, base.hsl.l),
+      this.hslToColor((h + 180) % 360, base.hsl.s, base.hsl.l),
+      this.hslToColor((h + 240) % 360, base.hsl.s, base.hsl.l),
+    ];
+  });
+
+  readonly square = computed<ColorInfo[]>(() => {
+    const base = this.currentColor();
+    const h = base.hsl.h;
+    return [
+      base,
+      this.hslToColor((h + 45) % 360, base.hsl.s, base.hsl.l),
+      this.hslToColor((h + 90) % 360, base.hsl.s, base.hsl.l),
+      this.hslToColor((h + 135) % 360, base.hsl.s, base.hsl.l),
+      this.hslToColor((h + 180) % 360, base.hsl.s, base.hsl.l),
+    ];
+  });
+
+  readonly harmony = computed<ColorInfo[]>(() => {
+    const base = this.currentColor();
+    const h = base.hsl.h;
+    const s = base.hsl.s;
+    const l = base.hsl.l;
+    return [
+      this.hslToColor(h, s, l),
+      this.hslToColor((h + 30) % 360, s, l),
+      this.hslToColor((h - 30 + 360) % 360, s, l),
+      this.hslToColor((h + 180) % 360, s, l),
+    ];
   });
 
   setBaseColor(hex: string): void {
@@ -88,7 +126,10 @@ export class ColorService {
     this.baseHue.set(Math.floor(Math.random() * 360));
     this.saturation.set(50 + Math.floor(Math.random() * 40));
     this.lightness.set(30 + Math.floor(Math.random() * 40));
+    this.lastGenerated.set(Date.now());
   }
+
+  readonly lastGenerated = signal<number>(0);
 
   private hexToRgb(hex: string): { r: number; g: number; b: number } | null {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -177,5 +218,33 @@ export class ColorService {
   meetsWcagAAA(hexBg: string, hexFg: string): boolean {
     const ratio = this.getContrastRatio(hexBg, hexFg);
     return ratio >= 7;
+  }
+
+  getColorName(hex: string): string {
+    const names: { name: string, regex: RegExp }[] = [
+      { name: 'Negro', regex: /^#000000$/i },
+      { name: 'Blanco', regex: /^#FFFFFF$/i },
+      { name: 'Rojo', regex: /^#FF0000$/i },
+      { name: 'Verde', regex: /^#00FF00$/i },
+      { name: 'Azul', regex: /^#0000FF$/i },
+      { name: 'Amarillo', regex: /^#FFFF00$/i },
+      { name: 'Cian', regex: /^#00FFFF$/i },
+      { name: 'Magenta', regex: /^#FF00FF$/i },
+      { name: 'Naranja', regex: /^#FFA500$/i },
+      { name: 'Purple', regex: /^#800080$/i },
+    ];
+    
+    const colorName = names.find(item => item.regex.test(hex));
+    return colorName ? colorName.name : 'Sin nombre';
+  }
+
+  setRandomColorWithVariety(): void {
+    const hue = Math.floor(Math.random() * 360);
+    const saturation = 40 + Math.floor(Math.random() * 40);
+    const lightness = 20 + Math.floor(Math.random() * 60);
+    this.baseHue.set(hue);
+    this.saturation.set(saturation);
+    this.lightness.set(lightness);
+    this.lastGenerated.set(Date.now());
   }
 }
