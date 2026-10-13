@@ -2,7 +2,9 @@ import { Component, inject, signal, effect, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ColorService, ColorInfo } from './services/color.service';
-import { ThemeService, Theme } from './services/theme.service';
+import { ThemeService } from './services/theme.service';
+import { TranslationService } from './services/translation.service';
+import { LanguageToggleComponent } from './components/language-toggle.component';
 
 interface PaletteOption {
   id: string;
@@ -13,18 +15,39 @@ interface PaletteOption {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LanguageToggleComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
   private colorService = inject(ColorService);
   private themeService = inject(ThemeService);
+  private translationService = inject(TranslationService);
 
   readonly currentColor = this.colorService.currentColor;
   readonly selectedPalette = signal<string>('monochromatic');
   readonly theme = this.themeService.theme;
   readonly isDark = this.themeService.isDark;
+
+  t(key: string): string {
+    return this.translationService.t(key);
+  }
+
+  tPalette(key: string): string {
+    return this.translationService.tPalette(key);
+  }
+
+  tColor(key: string): string {
+    return this.translationService.tColor(key);
+  }
+
+  tAction(key: string): string {
+    return this.translationService.tAction(key);
+  }
+
+  tAria(key: string): string {
+    return this.translationService.tAria(key);
+  }
 
   getPaletteButtonClass(paletteId: string): Record<string, boolean> {
     const isSelected = this.selectedPalette() === paletteId;
@@ -63,15 +86,22 @@ export class AppComponent {
   }
 
   readonly paletteType = signal<PaletteOption[]>([
-    { id: 'complementary', name: 'Complementario', icon: '⚖️' },
-    { id: 'monochromatic', name: 'Monocromática', icon: '📊' },
-    { id: 'analogous', name: 'Análoga', icon: '🌈' },
-    { id: 'triadic', name: 'Tríádica', icon: '🔺' },
-    { id: 'tetradic', name: 'Tetrádica', icon: '🟦' },
-    { id: 'square', name: 'Cuadrada', icon: '⬜' },
-    { id: 'harmony', name: 'Armonía', icon: '🎵' },
-    { id: 'trending', name: 'Tendencia 2026', icon: '🔥' }
+    { id: 'complementary', name: '', icon: '⚖️' },
+    { id: 'monochromatic', name: '', icon: '📊' },
+    { id: 'analogous', name: '', icon: '🌈' },
+    { id: 'triadic', name: '', icon: '🔺' },
+    { id: 'tetradic', name: '', icon: '🟦' },
+    { id: 'square', name: '', icon: '⬜' },
+    { id: 'harmony', name: '', icon: '🎵' },
+    { id: 'trending', name: '', icon: '🔥' }
   ]);
+
+  readonly paletteNames = computed(() => {
+    return this.paletteType().map(p => ({
+      ...p,
+      name: this.translationService.tPaletteType(p.id, 'name')
+    }));
+  });
 
   readonly currentPaletteColors = computed<ColorInfo[]>(() => {
     const type = this.selectedPalette();
@@ -125,21 +155,25 @@ export class AppComponent {
     this.loadFavorites();
   }
 
-  getColorName(hex: string): string {
-    const names: { name: string, regex: RegExp }[] = [
-      { name: 'Negro', regex: /^#000000$/i },
-      { name: 'Blanco', regex: /^#FFFFFF$/i },
-      { name: 'Rojo', regex: /^#FF0000$/i },
-      { name: 'Verde', regex: /^#00FF00$/i },
-      { name: 'Azul', regex: /^#0000FF$/i },
-      { name: 'Amarillo', regex: /^#FFFF00$/i },
-      { name: 'Cian', regex: /^#00FFFF$/i },
-      { name: 'Magenta', regex: /^#FF00FF$/i },
-      { name: 'Naranja', regex: /^#FFA500$/i },
-      { name: 'Purple', regex: /^#800080$/i },
+  getColorNameKey(hex: string): string {
+    const colorKeys: { key: string, regex: RegExp }[] = [
+      { key: 'colors.black', regex: /^#000000$/i },
+      { key: 'colors.white', regex: /^#FFFFFF$/i },
+      { key: 'colors.red', regex: /^#FF0000$/i },
+      { key: 'colors.green', regex: /^#00FF00$/i },
+      { key: 'colors.blue', regex: /^#0000FF$/i },
+      { key: 'colors.yellow', regex: /^#FFFF00$/i },
+      { key: 'colors.cyan', regex: /^#00FFFF$/i },
+      { key: 'colors.magenta', regex: /^#FF00FF$/i },
+      { key: 'colors.orange', regex: /^#FFA500$/i },
+      { key: 'colors.purple', regex: /^#800080$/i },
     ];
-    const colorName = names.find(item => item.regex.test(hex));
-    return colorName ? colorName.name : 'Sin nombre';
+    const colorName = colorKeys.find(item => item.regex.test(hex));
+    return colorName ? colorName.key : 'colors.unknown';
+  }
+
+  getColorName(hex: string): string {
+    return this.tColor(this.getColorNameKey(hex));
   }
 
   setRandomColorWithVariety(): void {

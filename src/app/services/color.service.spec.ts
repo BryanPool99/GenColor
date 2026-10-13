@@ -134,10 +134,17 @@ describe('ColorService', () => {
     it('should have hues within 60 degrees range', () => {
       service.setBaseColor('#ff0000');
       const palette = service.analogous();
-      const hues = palette.map(c => c.hsl.h);
-      const minHue = Math.min(...hues);
-      const maxHue = Math.max(...hues);
-      expect(maxHue - minHue).toBeLessThanOrEqual(60);
+      const hues = palette.map(c => c.hsl.h).sort((a, b) => a - b);
+      // Calculate circular range: max gap between consecutive hues (including wrap-around)
+      let maxGap = 0;
+      for (let i = 0; i < hues.length; i++) {
+        const current = hues[i];
+        const next = hues[(i + 1) % hues.length];
+        const gap = (next - current + 360) % 360;
+        maxGap = Math.max(maxGap, gap);
+      }
+      const circularRange = 360 - maxGap;
+      expect(circularRange).toBeLessThanOrEqual(60);
     });
   });
 
@@ -234,20 +241,20 @@ describe('ColorService', () => {
   });
 
   describe('getColorName', () => {
-    it('should return Negro for #000000', () => {
-      expect(service.getColorName('#000000')).toBe('Negro');
+    it('should return colors.black for #000000', () => {
+      expect(service.getColorName('#000000')).toBe('colors.black');
     });
 
-    it('should return Blanco for #FFFFFF', () => {
-      expect(service.getColorName('#FFFFFF')).toBe('Blanco');
+    it('should return colors.white for #FFFFFF', () => {
+      expect(service.getColorName('#FFFFFF')).toBe('colors.white');
     });
 
-    it('should return Rojo for #FF0000', () => {
-      expect(service.getColorName('#FF0000')).toBe('Rojo');
+    it('should return colors.red for #FF0000', () => {
+      expect(service.getColorName('#FF0000')).toBe('colors.red');
     });
 
-    it('should return Sin nombre for unknown colors', () => {
-      expect(service.getColorName('#123456')).toBe('Sin nombre');
+    it('should return colors.unknown for unknown colors', () => {
+      expect(service.getColorName('#123456')).toBe('colors.unknown');
     });
   });
 

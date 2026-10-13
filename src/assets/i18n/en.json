@@ -1,0 +1,58 @@
+{
+  "app": {
+    "title": "Color Palette Generator",
+    "subtitle": "Create unique palettes with Angular Signals + Tailwind"
+  },
+  "palette": {
+    "types": "Palette Types",
+    "baseColor": "Base Color",
+    "random": "Random",
+    "export": "Export",
+    "hex": "HEX",
+    "hsl": "HSL",
+    "contrastWhite": "With White",
+    "contrastBlack": "With Black",
+    "generated": "Generated Palette",
+    "favorites": "Favorites",
+    "preview": "Preview",
+    "previewDesc": "UI Preview",
+    "header": "Header",
+    "button": "Button",
+    "ads": "AdSense Space"
+  },
+  "colors": {
+    "black": "Black",
+    "white": "White",
+    "red": "Red",
+    "green": "Green",
+    "blue": "Blue",
+    "yellow": "Yellow",
+    "cyan": "Cyan",
+    "magenta": "Magenta",
+    "orange": "Orange",
+    "purple": "Purple",
+    "unknown": "Unnamed"
+  },
+  "paletteTypes": {
+    "monochromatic": { "name": "Monochromatic", "desc": "Single hue variations" },
+    "complementary": { "name": "Complementary", "desc": "Opposite colors on wheel" },
+    "analogous": { "name": "Analogous", "desc": "Adjacent harmonious colors" },
+    "triadic": { "name": "Triadic", "desc": "Three equidistant colors" },
+    "tetradic": { "name": "Tetradic", "desc": "Four colors in rectangle" },
+    "square": { "name": "Square", "desc": "Four colors in square" },
+    "harmony": { "name": "Harmony", "desc": "Analogous + complementary" },
+    "trending": { "name": "2026 Trending", "desc": "This year's trend colors" }
+  },
+  "actions": {
+    "copy": "Copy",
+    "copied": "Copied!",
+    "addToFavorites": "Add to favorites",
+    "removeFromFavorites": "Remove from favorites"
+  },
+  "aria": {
+    "baseColor": "Base color: ",
+    "favoriteColor": "Favorite: ",
+    "toggleTheme": "Toggle theme",
+    "copyColor": "Copy color to clipboard"
+  }
+}
