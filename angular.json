@@ -54,11 +54,6 @@
                 "glob": "**/*",
                 "input": "src/assets/i18n",
                 "output": "assets/i18n"
-              },
-              {
-                "glob": "favicon.svg",
-                "input": "src",
-                "output": "/"
               }
             ],
             "styles": [
@@ -141,5 +136,8 @@
       "analytics": false,
       "root": ""
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }
