@@ -128,9 +128,7 @@
                 "input": "src",
                 "output": "/"
               }
-            ],
-              }
-            ],
+],
             "styles": [
               "src/styles.css"
             ],
@@ -138,9 +136,10 @@
           }
         }
       }
+    },
+    "cli": {
+      "analytics": false,
+      "root": ""
     }
-  },
-  "cli": {
-    "analytics": false
   }
 }
