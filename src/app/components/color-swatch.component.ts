@@ -1,5 +1,6 @@
-import { Component, Input, Output, EventEmitter, signal } from '@angular/core';
+import { Component, Input, Output, EventEmitter, signal, inject } from '@angular/core';
 import { ColorInfo } from '../services/color.service';
+import { TranslationService } from '../services/translation.service';
 
 @Component({
   selector: 'app-color-swatch',
@@ -9,6 +10,7 @@ import { ColorInfo } from '../services/color.service';
       class="color-swatch rounded-xl overflow-hidden shadow-sm cursor-pointer group"
       [style.background-color]="color.hex"
       (click)="copyToClipboard()"
+      [attr.aria-label]="t('aria.copyColor') + ' ' + color.hex"
     >
       <div class="h-20 sm:h-24 relative">
         <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/20 transition-opacity">
@@ -31,10 +33,16 @@ import { ColorInfo } from '../services/color.service';
   `
 })
 export class ColorSwatchComponent {
+  private translationService = inject(TranslationService);
+
   @Input({ required: true }) color!: ColorInfo;
   @Output() copy = new EventEmitter<string>();
 
   readonly isCopied = signal(false);
+
+  t(key: string): string {
+    return this.translationService.t(key);
+  }
 
   copyToClipboard(): void {
     this.copy.emit(this.color.hex);

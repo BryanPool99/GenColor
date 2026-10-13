@@ -220,22 +220,26 @@ export class ColorService {
     return ratio >= 7;
   }
 
-  getColorName(hex: string): string {
-    const names: { name: string, regex: RegExp }[] = [
-      { name: 'Negro', regex: /^#000000$/i },
-      { name: 'Blanco', regex: /^#FFFFFF$/i },
-      { name: 'Rojo', regex: /^#FF0000$/i },
-      { name: 'Verde', regex: /^#00FF00$/i },
-      { name: 'Azul', regex: /^#0000FF$/i },
-      { name: 'Amarillo', regex: /^#FFFF00$/i },
-      { name: 'Cian', regex: /^#00FFFF$/i },
-      { name: 'Magenta', regex: /^#FF00FF$/i },
-      { name: 'Naranja', regex: /^#FFA500$/i },
-      { name: 'Purple', regex: /^#800080$/i },
+  getColorNameKey(hex: string): string {
+    const colorKeys: { key: string, regex: RegExp }[] = [
+      { key: 'colors.black', regex: /^#000000$/i },
+      { key: 'colors.white', regex: /^#FFFFFF$/i },
+      { key: 'colors.red', regex: /^#FF0000$/i },
+      { key: 'colors.green', regex: /^#00FF00$/i },
+      { key: 'colors.blue', regex: /^#0000FF$/i },
+      { key: 'colors.yellow', regex: /^#FFFF00$/i },
+      { key: 'colors.cyan', regex: /^#00FFFF$/i },
+      { key: 'colors.magenta', regex: /^#FF00FF$/i },
+      { key: 'colors.orange', regex: /^#FFA500$/i },
+      { key: 'colors.purple', regex: /^#800080$/i },
     ];
     
-    const colorName = names.find(item => item.regex.test(hex));
-    return colorName ? colorName.name : 'Sin nombre';
+    const colorName = colorKeys.find(item => item.regex.test(hex));
+    return colorName ? colorName.key : 'colors.unknown';
+  }
+
+  getColorName(hex: string): string {
+    return this.getColorNameKey(hex);
   }
 
   setRandomColorWithVariety(): void {

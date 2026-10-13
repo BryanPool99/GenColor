@@ -3,12 +3,13 @@
     <header class="text-center mb-10">
       <div class="flex items-center justify-center gap-4 mb-4">
         <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-0 tracking-tight">
-          Generador de Paletas
+          {{ t('app.title') }}
         </h1>
+        <app-language-toggle />
         <button
           (click)="toggleTheme()"
           class="p-2 rounded-xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all duration-200"
-          [attr.aria-label]="isDark() ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
+          [attr.aria-label]="tAria('toggleTheme')"
         >
           <ng-container *ngIf="isDark(); else lightIcon">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -23,16 +24,16 @@
         </button>
       </div>
       <p class="text-gray-500 dark:text-slate-400 text-sm sm:text-base">
-        Crea paletas únicas con Angular Signals + Tailwind
+        {{ t('app.subtitle') }}
       </p>
     </header>
 
     <div class="grid lg:grid-cols-3 gap-8">
       <div class="lg:col-span-2 space-y-6">
         <section class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
-          <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Tipos de Paleta</h2>
+          <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">{{ tPalette('types') }}</h2>
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            @for (palette of paletteType(); track palette.id) {
+            @for (palette of paletteNames(); track palette.id) {
               <button
                 (click)="selectPalette(palette.id)"
                 class="p-3 rounded-xl text-left transition-all duration-200 flex items-center gap-2"
@@ -47,7 +48,7 @@
 
         <section class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
           <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-semibold text-gray-800 dark:text-white">Color Base</h2>
+            <h2 class="text-lg font-semibold text-gray-800 dark:text-white">{{ tPalette('baseColor') }}</h2>
             <div class="flex items-center gap-2">
               <button
                 (click)="setRandomColorWithVariety()"
@@ -57,7 +58,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
-                Aleatorio
+                {{ tPalette('random') }}
               </button>
               <button
                 (click)="generateJSONExport()"
@@ -67,7 +68,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                 </svg>
-                Exportar
+                {{ tPalette('export') }}
               </button>
             </div>
           </div>
@@ -79,7 +80,7 @@
                 [value]="currentColor().hex"
                 (input)="onColorInputChange($event)"
                 class="absolute inset-0 w-full h-full cursor-pointer opacity-0"
-                [attr.aria-label]="'Color base: ' + currentColor().hex"
+                [attr.aria-label]="tAria('baseColor') + currentColor().hex"
               />
               <div
                 class="w-full h-full flex items-center justify-center"
@@ -92,7 +93,7 @@
             <div class="flex-1 w-full">
               <div class="space-y-2">
                 <div class="flex items-center gap-3">
-                  <label class="text-xs text-gray-500 dark:text-slate-400 w-12">HEX</label>
+                  <label class="text-xs text-gray-500 dark:text-slate-400 w-12">{{ tPalette('hex') }}</label>
                   <input
                     type="text"
                     [value]="currentColor().hex"
@@ -102,7 +103,7 @@
                   />
                 </div>
                 <div class="flex items-center gap-3">
-                  <label class="text-xs text-gray-500 dark:text-slate-400 w-12">HSL</label>
+                  <label class="text-xs text-gray-500 dark:text-slate-400 w-12">{{ tPalette('hsl') }}</label>
                   <input
                     type="text"
                     [value]="currentColor().hsl.h + ', ' + currentColor().hsl.s + '%, ' + currentColor().hsl.l + '%'"
@@ -116,7 +117,7 @@
 
           <div class="grid grid-cols-2 gap-3 mt-4 pt-4 border-t border-gray-200 dark:border-slate-700">
             <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg">
-              <span class="text-sm text-gray-600 dark:text-slate-300">Con Blanco</span>
+              <span class="text-sm text-gray-600 dark:text-slate-300">{{ tPalette('contrastWhite') }}</span>
               <div class="flex items-center gap-2">
                 <span class="text-xs font-mono text-gray-400 dark:text-slate-500">{{ contrastWhite().ratio.toFixed(2) }}:1</span>
                 <span
@@ -128,7 +129,7 @@
               </div>
             </div>
             <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg">
-              <span class="text-sm text-gray-600 dark:text-slate-300">Con Negro</span>
+              <span class="text-sm text-gray-600 dark:text-slate-300">{{ tPalette('contrastBlack') }}</span>
               <div class="flex items-center gap-2">
                 <span class="text-xs font-mono text-gray-400 dark:text-slate-500">{{ contrastBlack().ratio.toFixed(2) }}:1</span>
                 <span
@@ -143,7 +144,7 @@
         </section>
 
         <section class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
-          <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Paleta Generada</h2>
+          <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">{{ tPalette('generated') }}</h2>
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
             @for (color of currentPaletteColors(); track $index; let i = $index) {
               <div class="group relative">
@@ -173,7 +174,7 @@
                       <p class="font-mono text-xs text-gray-700 dark:text-slate-300 font-semibold">{{ color.hex }}</p>
                       <button
                         class="p-1 text-gray-400 hover:text-red-500 transition-colors"
-                        [attr.aria-label]="'Añadir ' + color.hex + ' a favoritos'"
+                        [attr.aria-label]="tAction('addToFavorites') + ' ' + color.hex"
                         (click)="$event.stopPropagation(); toggleFavorite(color.hex)"
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"
@@ -196,14 +197,14 @@
       <div class="lg:col-span-1">
         <div class="sticky top-8 space-y-6">
           <section class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 p-6" [class.hidden]="getFavoriteCount() === 0">
-            <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Favoritos ({{ getFavoriteCount() }})</h2>
+            <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">{{ tPalette('favorites' ) }} ({{ getFavoriteCount() }})</h2>
             <div class="grid grid-cols-2 gap-2">
               @for (favColor of favoriteColors(); track $index) {
                 <button
                   (click)="copyToClipboard(favColor.hex)"
                   class="h-12 rounded-lg relative transition-transform hover:scale-105"
                   [style.background-color]="favColor.hex"
-                  [attr.aria-label]="'Favorito: ' + favColor.hex"
+                  [attr.aria-label]="tAria('favoriteColor') + favColor.hex"
                 >
                   <span class="absolute inset-0 flex items-center justify-center text-white text-xs font-mono">
                     {{ favColor.hex }}
@@ -214,7 +215,7 @@
           </section>
 
           <section class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
-            <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Preview</h2>
+            <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">{{ tPalette('preview') }}</h2>
             <div
               class="preview-card rounded-xl overflow-hidden"
               [style.background-color]="previewColors().bg"
@@ -225,7 +226,7 @@
                   [style.background-color]="previewColors().primary"
                   [style.color]="previewColors().bg"
                 >
-                  Header
+                  {{ tPalette('header') }}
                 </div>
                 <div
                   class="p-3 rounded-lg"
@@ -252,7 +253,7 @@
                   [style.background-color]="previewColors().primary"
                   [style.color]="previewColors().bg"
                 >
-                  Botón
+                  {{ tPalette('button') }}
                 </button>
                 <div class="flex gap-2">
                   @for (c of [0,1,2,3,4]; track c) {
@@ -265,13 +266,13 @@
                 </div>
               </div>
             </div>
-            <p class="text-xs text-gray-400 dark:text-slate-500 mt-3 text-center">Vista previa de interfaz</p>
+            <p class="text-xs text-gray-400 dark:text-slate-500 mt-3 text-center">{{ tPalette('previewDesc') }}</p>
           </section>
-
-          <div class="bg-gray-50 dark:bg-slate-700/50 rounded-xl p-4 text-center">
-            <p class="text-xs text-gray-400 dark:text-slate-500">Espacio para AdSense</p>
+          <!-- TODO: ads -->
+          <!-- <div class="bg-gray-50 dark:bg-slate-700/50 rounded-xl p-4 text-center">
+            <p class="text-xs text-gray-400 dark:text-slate-500">{{ tPalette('ads') }}</p>
             <p class="text-xs text-gray-300 dark:text-slate-600 mt-1">376x280</p>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

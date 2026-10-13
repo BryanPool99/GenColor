@@ -1,0 +1,58 @@
+{
+  "app": {
+    "title": "Generador de Paletas",
+    "subtitle": "Crea paletas únicas con Angular Signals + Tailwind"
+  },
+  "palette": {
+    "types": "Tipos de Paleta",
+    "baseColor": "Color Base",
+    "random": "Aleatorio",
+    "export": "Exportar",
+    "hex": "HEX",
+    "hsl": "HSL",
+    "contrastWhite": "Con Blanco",
+    "contrastBlack": "Con Negro",
+    "generated": "Paleta Generada",
+    "favorites": "Favoritos",
+    "preview": "Preview",
+    "previewDesc": "Vista previa de interfaz",
+    "header": "Header",
+    "button": "Botón",
+    "ads": "Espacio para AdSense"
+  },
+  "colors": {
+    "black": "Negro",
+    "white": "Blanco",
+    "red": "Rojo",
+    "green": "Verde",
+    "blue": "Azul",
+    "yellow": "Amarillo",
+    "cyan": "Cian",
+    "magenta": "Magenta",
+    "orange": "Naranja",
+    "purple": "Púrpura",
+    "unknown": "Sin nombre"
+  },
+  "paletteTypes": {
+    "monochromatic": { "name": "Monocromática", "desc": "Variaciones de un solo tono" },
+    "complementary": { "name": "Complementario", "desc": "Colores opuestos en la rueda" },
+    "analogous": { "name": "Análoga", "desc": "Colores adyacentes armoniosos" },
+    "triadic": { "name": "Tríádica", "desc": "Tres colores equidistantes" },
+    "tetradic": { "name": "Tetrádica", "desc": "Cuatro colores en rectángulo" },
+    "square": { "name": "Cuadrada", "desc": "Cuatro colores en cuadrado" },
+    "harmony": { "name": "Armonía", "desc": "Análogos + complementario" },
+    "trending": { "name": "Tendencia 2026", "desc": "Colores de moda del año" }
+  },
+  "actions": {
+    "copy": "Copiar",
+    "copied": "¡Copiado!",
+    "addToFavorites": "Añadir a favoritos",
+    "removeFromFavorites": "Quitar de favoritos"
+  },
+  "aria": {
+    "baseColor": "Color base: ",
+    "favoriteColor": "Favorito: ",
+    "toggleTheme": "Cambiar tema",
+    "copyColor": "Copiar color al portapapeles"
+  }
+}
