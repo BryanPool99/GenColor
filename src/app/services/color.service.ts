@@ -222,20 +222,20 @@ export class ColorService {
 
   getColorNameKey(hex: string): string {
     const colorKeys: { key: string, regex: RegExp }[] = [
-      { key: 'colors.black', regex: /^#000000$/i },
-      { key: 'colors.white', regex: /^#FFFFFF$/i },
-      { key: 'colors.red', regex: /^#FF0000$/i },
-      { key: 'colors.green', regex: /^#00FF00$/i },
-      { key: 'colors.blue', regex: /^#0000FF$/i },
-      { key: 'colors.yellow', regex: /^#FFFF00$/i },
-      { key: 'colors.cyan', regex: /^#00FFFF$/i },
-      { key: 'colors.magenta', regex: /^#FF00FF$/i },
-      { key: 'colors.orange', regex: /^#FFA500$/i },
-      { key: 'colors.purple', regex: /^#800080$/i },
+      { key: 'black', regex: /^#000000$/i },
+      { key: 'white', regex: /^#FFFFFF$/i },
+      { key: 'red', regex: /^#FF0000$/i },
+      { key: 'green', regex: /^#00FF00$/i },
+      { key: 'blue', regex: /^#0000FF$/i },
+      { key: 'yellow', regex: /^#FFFF00$/i },
+      { key: 'cyan', regex: /^#00FFFF$/i },
+      { key: 'magenta', regex: /^#FF00FF$/i },
+      { key: 'orange', regex: /^#FFA500$/i },
+      { key: 'purple', regex: /^#800080$/i },
     ];
     
     const colorName = colorKeys.find(item => item.regex.test(hex));
-    return colorName ? colorName.key : 'colors.unknown';
+    return colorName ? colorName.key : 'unknown';
   }
 
   getColorName(hex: string): string {

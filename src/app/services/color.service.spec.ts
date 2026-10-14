@@ -241,20 +241,20 @@ describe('ColorService', () => {
   });
 
   describe('getColorName', () => {
-    it('should return colors.black for #000000', () => {
-      expect(service.getColorName('#000000')).toBe('colors.black');
+    it('should return black for #000000', () => {
+      expect(service.getColorName('#000000')).toBe('black');
     });
 
-    it('should return colors.white for #FFFFFF', () => {
-      expect(service.getColorName('#FFFFFF')).toBe('colors.white');
+    it('should return white for #FFFFFF', () => {
+      expect(service.getColorName('#FFFFFF')).toBe('white');
     });
 
-    it('should return colors.red for #FF0000', () => {
-      expect(service.getColorName('#FF0000')).toBe('colors.red');
+    it('should return red for #FF0000', () => {
+      expect(service.getColorName('#FF0000')).toBe('red');
     });
 
-    it('should return colors.unknown for unknown colors', () => {
-      expect(service.getColorName('#123456')).toBe('colors.unknown');
+    it('should return unknown for unknown colors', () => {
+      expect(service.getColorName('#123456')).toBe('unknown');
     });
   });
 
